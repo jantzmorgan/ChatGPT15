@@ -34,7 +34,13 @@
   <string>1.0</string>
   <key>CFBundleVersion</key>
   <string>100</string>
-  <key>NSCameraUsageDescription</key>\n  <string>Luma uses the camera only when you choose Camera to attach a photo to a chat.</string>\n  <key>NSPhotoLibraryUsageDescription</key>\n  <string>Luma uses your photo library only when you choose a photo to attach to a chat.</string>\n  <key>NSPhotoLibraryAddUsageDescription</key>\n  <string>Luma can save generated images to your photo library when you ask it to.</string>\n  <key>LSRequiresIPhoneOS</key>
+  <key>NSCameraUsageDescription</key>
+  <string>Luma uses the camera only when you choose Camera to attach a photo to a chat.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Luma uses your photo library only when you choose a photo to attach to a chat.</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>Luma can save generated images to your photo library when you ask it to.</string>
+  <key>LSRequiresIPhoneOS</key>
   <true/>
   <key>MinimumOSVersion</key>
   <string>15.0</string>
