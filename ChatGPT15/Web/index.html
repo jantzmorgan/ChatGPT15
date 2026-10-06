@@ -1,90 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#05070b">
-<title>ChatGPT 15</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#05070b"><title>ChatGPT 15</title><link rel="stylesheet" href="style.css"></head><body>
 <div id="app">
-  <header id="header">
-    <button id="menuButton" class="headerButton" type="button">☰</button>
-    <button id="modelButton" class="modelButton" type="button"><span id="headerModel">GPT-6 Luna</span><small>⌄</small></button>
-    <button id="settingsButton" class="headerButton" type="button">⚙</button>
-  </header>
-
-  <main id="messages">
-    <div class="welcome" id="welcome">
-      <div class="orb">✦</div>
-      <h1>What can I help with?</h1>
-      <p>ChatGPT-style AI for iOS 15.</p>
-    </div>
-  </main>
-
-  <div id="attachmentPreview" class="attachmentPreview hidden"></div>
-
-  <div id="composerArea">
-    <div id="composer">
-      <button id="attachButton" class="composerTool" type="button">＋</button>
-      <textarea id="messageInput" placeholder="Message" rows="1" enterkeyhint="send" autocorrect="on" autocapitalize="sentences"></textarea>
-      <button id="sendButton" type="button">↑</button>
-    </div>
-    <div class="footerText" id="usageText">AI can make mistakes.</div>
-  </div>
+<header><button id="menuBtn" class="iconBtn" aria-label="Chats"><span class="hamb"><i></i><i></i><i></i></span></button><button id="modelBtn" class="modelBtn"><span id="modelLabel">GPT-5.6 Luna</span><span class="chev">⌄</span></button><button id="settingsBtn" class="iconBtn" aria-label="Settings">⚙</button></header>
+<main id="messages"><section id="welcome" class="welcome"><div class="orb">✦</div><h1>What can I help with?</h1><p>ChatGPT for iOS 15</p></section></main>
+<div id="attachPreview" class="attachPreview hidden"></div>
+<footer><div class="composer"><button id="attachBtn" class="attachBtn" aria-label="Attach image">＋</button><textarea id="prompt" rows="1" placeholder="Message ChatGPT" enterkeyhint="send"></textarea><button id="sendBtn" class="sendBtn" aria-label="Send"><span class="sendArrow"></span></button></div><div id="usageLine" class="usageLine">AI can make mistakes.</div></footer>
 </div>
 
-<div id="sidebarOverlay" class="overlay hidden">
-  <aside id="sidebar" class="sidebar">
-    <div class="sideTop"><h2>Chats</h2><button id="closeSidebar" class="roundButton">✕</button></div>
-    <button id="newChatButton" class="primaryPanelButton">＋ New Chat</button>
-    <div class="searchWrap"><input id="chatSearch" type="search" placeholder="Search chats"></div>
-    <div id="chatList" class="chatList"></div>
-  </aside>
-</div>
+<div id="drawerOverlay" class="overlay hidden"><aside id="drawer"><div class="drawerHead"><h2>Chats</h2><button id="drawerClose" class="roundBtn">×</button></div><button id="newChatBtn" class="primary">＋ New chat</button><input id="chatSearch" class="field" type="search" placeholder="Search chats"><div id="chatList"></div></aside></div>
 
-<div id="settingsOverlay" class="overlay hidden">
-  <section id="settingsPanel" class="sheet">
-    <div class="panelHandle"></div>
-    <div class="sideTop"><h2>Settings</h2><button id="closeSettings" class="roundButton">✕</button></div>
-    <label>OpenAI API Key</label>
-    <input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off">
-    <label>Model</label>
-    <select id="modelSelect">
-      <option value="gpt-6-luna">GPT-6 Luna</option>
-      <option value="gpt-6.1-sol">GPT-6.1 Sol</option>
-      <option value="gpt-6-astra">GPT-6 Astra</option>
-    </select>
-    <label>System instructions</label>
-    <textarea id="systemPrompt" class="settingsTextarea" rows="3" placeholder="Optional instructions"></textarea>
-    <label class="switchRow"><span>Show token usage</span><input id="usageToggle" type="checkbox"></label>
-    <button id="saveSettings" class="primaryPanelButton">Save Settings</button>
-    <p class="settingsNote">Your API key and chats stay on this device.</p>
-  </section>
-</div>
+<div id="settingsOverlay" class="overlay hidden"><section id="settingsSheet" class="sheet"><div class="handle"></div><div class="drawerHead"><h2>Settings</h2><button id="settingsClose" class="roundBtn">×</button></div><label>OpenAI API key</label><div class="keyRow"><input id="apiKey" class="field" type="password" placeholder="sk-..." autocomplete="off"><button id="keyReveal" class="miniBtn">Show</button></div><label>Model</label><select id="modelSelect" class="field"><option value="gpt-5.6-luna">GPT-5.6 Luna</option><option value="gpt-5.6-terra">GPT-5.6 Terra</option><option value="gpt-5.6-sol">GPT-5.6 Sol</option></select><label>Custom instructions</label><textarea id="instructions" class="field settingsText" rows="4" placeholder="Optional instructions for every chat"></textarea><label class="toggleRow"><span>Show token usage</span><input id="usageToggle" type="checkbox"></label><button id="saveSettings" class="primary">Save settings</button><p class="note">Chats and your key are stored locally on this iPhone.</p></section></div>
 
-<div id="modelOverlay" class="overlay hidden">
-  <section id="modelPanel" class="sheet compactSheet">
-    <div class="panelHandle"></div>
-    <h2>Choose model</h2>
-    <button class="modelChoice" data-model="gpt-6-luna">GPT-6 Luna <span>Fast & inexpensive</span></button>
-    <button class="modelChoice" data-model="gpt-6.1-sol">GPT-6.1 Sol <span>More capable</span></button>
-    <button class="modelChoice" data-model="gpt-6-astra">GPT-6 Astra <span>Most capable</span></button>
-  </section>
-</div>
+<div id="modelOverlay" class="overlay hidden"><section id="modelSheet" class="sheet smallSheet"><div class="handle"></div><h2>Choose model</h2><button class="modelChoice" data-model="gpt-5.6-luna"><b>GPT-5.6 Luna</b><span>Fastest</span></button><button class="modelChoice" data-model="gpt-5.6-terra"><b>GPT-5.6 Terra</b><span>Balanced</span></button><button class="modelChoice" data-model="gpt-5.6-sol"><b>GPT-5.6 Sol</b><span>Most capable</span></button></section></div>
 
-<div id="messageMenu" class="overlay hidden">
-  <section class="sheet compactSheet">
-    <div class="panelHandle"></div>
-    <button id="copyMessage" class="menuAction">Copy response</button>
-    <button id="retryMessage" class="menuAction">Regenerate</button>
-    <button id="shareMessage" class="menuAction">Share</button>
-    <button id="cancelMessageMenu" class="menuAction dimAction">Cancel</button>
-  </section>
-</div>
-
-<input id="imagePicker" type="file" accept="image/*" class="hidden">
-<script src="app.js"></script>
-</body>
-</html>
+<div id="msgMenuOverlay" class="overlay hidden"><section id="msgMenu" class="sheet smallSheet"><div class="handle"></div><button id="copyBtn" class="actionBtn">Copy response</button><button id="regenBtn" class="actionBtn">Regenerate</button><button id="shareBtn" class="actionBtn">Share</button><button id="menuCancel" class="actionBtn muted">Cancel</button></section></div>
+<input id="imagePicker" class="hidden" type="file" accept="image/*">
+<script src="app.js"></script></body></html>
