@@ -1,0 +1,9 @@
+Package: com.jantzmorgan.luma
+Name: Luma
+Version: 1.0.1
+Architecture: iphoneos-arm
+Description: Modern AI client for legacy iOS. Bring your own OpenAI API key.
+Maintainer: Jantz Morgan
+Author: Jantz Morgan
+Section: Applications
+Depends: firmware (>= 15.0)
