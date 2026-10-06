@@ -107,8 +107,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             guard let page = document.page(at: index) else { continue }
             let text = page.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if !text.isEmpty {
-                pages.append("[Page \(index + 1)]
-" + text)
+                let pageHeader = "[Page " + String(index + 1) + "]"
+                pages.append(pageHeader + String(UnicodeScalar(10)!) + text)
             }
         }
 
