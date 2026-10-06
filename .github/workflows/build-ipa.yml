@@ -30,7 +30,7 @@ jobs:
           cp ChatGPT15/Info.plist build/Payload/ChatGPT15.app/Info.plist
           cp ChatGPT15/Web/index.html build/Payload/ChatGPT15.app/Web/index.html
           cp ChatGPT15/Web/style.css build/Payload/ChatGPT15.app/Web/style.css
-          cp ChatGPT15/Web/app.js build/Payload/ChatGPT15.app/Web/app.js
+          cp ChatGPT15/Web/app.js build/Payload/ChatGPT15.app/Web/app.js\n          if [ -f ChatGPT15/AppIcon.png ]; then cp ChatGPT15/AppIcon.png build/Payload/ChatGPT15.app/AppIcon.png; fi
 
           chmod +x build/Payload/ChatGPT15.app/ChatGPT15
 
