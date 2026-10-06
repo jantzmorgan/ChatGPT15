@@ -23,7 +23,8 @@ jobs:
             -target arm64-apple-ios15.0 \
             -sdk "$SDK" \
             -framework UIKit \
-            -framework WebKit \
+            -framework WebKit \\
+            -framework LocalAuthentication \
             ChatGPT15/AppDelegate.swift \
             -o build/Payload/ChatGPT15.app/ChatGPT15
 
