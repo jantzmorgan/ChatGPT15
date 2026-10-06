@@ -40,3 +40,7 @@
 .inlineProjectOpen{flex:1;min-width:0;border:0;background:transparent;text-align:left;padding:8px 9px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .inlineProjectMore{border:0;background:transparent;color:#718098;padding:9px 11px}
 .inlineNewProject{width:100%;border:0;background:transparent;color:#8491a7;text-align:left;padding:8px 9px;font-size:13px}
+
+/* Replace font chevron with geometrically centered CSS chevron */
+.chev{font-size:0!important;width:10px!important;height:20px!important;position:relative!important;top:0!important;margin:0 0 0 7px!important;display:inline-block!important;align-self:center!important}
+.chev::before{content:"";position:absolute;width:7px;height:7px;border-right:2px solid #78a8d8;border-bottom:2px solid #78a8d8;left:50%;top:50%;transform:translate(-50%,-68%) rotate(45deg);border-radius:1px}
