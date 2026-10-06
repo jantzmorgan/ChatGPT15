@@ -16,7 +16,7 @@ jobs:
         run: |
           set -e
           SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
-          mkdir -p build/Payload/ChatGPT15.app/Web
+          mkdir -p build/Payload/ChatGPT15.app/Web build/deb/Applications/Luma.app/Web build/deb/DEBIAN
 
           xcrun --sdk iphoneos swiftc \
             -parse-as-library \
@@ -44,6 +44,23 @@ jobs:
         run: |
           node --check ChatGPT15/Web/app.js
 
+      - name: Build Havoc DEB
+        run: |
+          set -e
+          cp build/Payload/ChatGPT15.app/ChatGPT15 build/deb/Applications/Luma.app/ChatGPT15
+          cp build/Payload/ChatGPT15.app/Info.plist build/deb/Applications/Luma.app/Info.plist
+          cp build/Payload/ChatGPT15.app/AppIcon.png build/deb/Applications/Luma.app/AppIcon.png
+          cp build/Payload/ChatGPT15.app/Web/index.html build/deb/Applications/Luma.app/Web/index.html
+          cp build/Payload/ChatGPT15.app/Web/style.css build/deb/Applications/Luma.app/Web/style.css
+          cp build/Payload/ChatGPT15.app/Web/app.js build/deb/Applications/Luma.app/Web/app.js
+          cp packaging/DEBIAN/control build/deb/DEBIAN/control
+          cp packaging/DEBIAN/postinst build/deb/DEBIAN/postinst
+          cp packaging/DEBIAN/prerm build/deb/DEBIAN/prerm
+          chmod 755 build/deb/DEBIAN/postinst build/deb/DEBIAN/prerm build/deb/Applications/Luma.app/ChatGPT15
+          dpkg-deb --build --root-owner-group build/deb build/Luma.deb
+          dpkg-deb --info build/Luma.deb
+          dpkg-deb --contents build/Luma.deb | head -80
+
       - name: Create IPA
         run: |
           cd build
@@ -54,4 +71,11 @@ jobs:
         with:
           name: Luma-TrollStore
           path: build/Luma.ipa
+          if-no-files-found: error
+
+      - name: Upload Havoc DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Luma-Havoc-DEB
+          path: build/Luma.deb
           if-no-files-found: error
