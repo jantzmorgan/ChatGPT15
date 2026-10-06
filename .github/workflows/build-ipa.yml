@@ -44,30 +44,17 @@ jobs:
         run: |
           node --check ChatGPT15/Web/app.js
 
-      - name: Install Debian packaging tools
-        run: brew install dpkg
-
-      - name: Build Havoc DEB
+      - name: Create and verify TrollStore IPA
         run: |
           set -e
-          cp build/Payload/ChatGPT15.app/ChatGPT15 build/deb/Applications/Luma.app/ChatGPT15
-          cp build/Payload/ChatGPT15.app/Info.plist build/deb/Applications/Luma.app/Info.plist
-          cp build/Payload/ChatGPT15.app/AppIcon.png build/deb/Applications/Luma.app/AppIcon.png
-          cp build/Payload/ChatGPT15.app/Web/index.html build/deb/Applications/Luma.app/Web/index.html
-          cp build/Payload/ChatGPT15.app/Web/style.css build/deb/Applications/Luma.app/Web/style.css
-          cp build/Payload/ChatGPT15.app/Web/app.js build/deb/Applications/Luma.app/Web/app.js
-          cp packaging/DEBIAN/control build/deb/DEBIAN/control
-          cp packaging/DEBIAN/postinst build/deb/DEBIAN/postinst
-          cp packaging/DEBIAN/prerm build/deb/DEBIAN/prerm
-          chmod 755 build/deb/DEBIAN/postinst build/deb/DEBIAN/prerm build/deb/Applications/Luma.app/ChatGPT15
-          dpkg-deb --build --root-owner-group build/deb build/Luma.deb
-          dpkg-deb --info build/Luma.deb
-          dpkg-deb --contents build/Luma.deb | head -80
-
-      - name: Create IPA
-        run: |
           cd build
           /usr/bin/zip -qry Luma.ipa Payload
+          test -f Luma.ipa
+          /usr/bin/unzip -t Luma.ipa
+          /usr/bin/unzip -l Luma.ipa | grep -q "Payload/ChatGPT15.app/Info.plist"
+          /usr/bin/unzip -l Luma.ipa | grep -q "Payload/ChatGPT15.app/ChatGPT15"
+          file Luma.ipa
+          shasum -a 256 Luma.ipa
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
@@ -76,6 +63,43 @@ jobs:
           path: build/Luma.ipa
           if-no-files-found: error
 
+
+  havoc-deb:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build app for Havoc
+        run: |
+          set -e
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          mkdir -p build/Payload/ChatGPT15.app/Web build/deb/Applications/Luma.app/Web build/deb/DEBIAN
+          xcrun --sdk iphoneos swiftc \
+            -parse-as-library \
+            -target arm64-apple-ios15.0 \
+            -sdk "$SDK" \
+            -framework UIKit \
+            -framework WebKit \
+            -framework LocalAuthentication \
+            -framework PDFKit \
+            ChatGPT15/AppDelegate.swift \
+            -o build/deb/Applications/Luma.app/ChatGPT15
+          cp ChatGPT15/Info.plist build/deb/Applications/Luma.app/Info.plist
+          cp ChatGPT15/AppIcon.png build/deb/Applications/Luma.app/AppIcon.png
+          cp ChatGPT15/Web/index.html build/deb/Applications/Luma.app/Web/index.html
+          cp ChatGPT15/Web/style.css build/deb/Applications/Luma.app/Web/style.css
+          cp ChatGPT15/Web/app.js build/deb/Applications/Luma.app/Web/app.js
+          cp packaging/DEBIAN/control build/deb/DEBIAN/control
+          cp packaging/DEBIAN/postinst build/deb/DEBIAN/postinst
+          cp packaging/DEBIAN/prerm build/deb/DEBIAN/prerm
+          chmod 755 build/deb/DEBIAN/postinst build/deb/DEBIAN/prerm build/deb/Applications/Luma.app/ChatGPT15
+      - name: Install Debian packaging tools
+        run: brew install dpkg
+      - name: Build Havoc DEB
+        run: |
+          set -e
+          dpkg-deb --build --root-owner-group build/deb build/Luma.deb
+          dpkg-deb --info build/Luma.deb
       - name: Upload Havoc DEB
         uses: actions/upload-artifact@v4
         with:
