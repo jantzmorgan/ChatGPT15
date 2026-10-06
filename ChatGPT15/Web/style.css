@@ -49,3 +49,8 @@
 
 /* Projects are folders containing chats */
 .inlineProjectGroup{margin:1px 0}.inlineProjectOpen{display:flex;align-items:center;gap:7px}.projectRowName{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.projectRowChevron{width:7px;height:7px;border-right:1.5px solid #718098;border-bottom:1.5px solid #718098;transform:rotate(45deg);margin-right:3px;margin-top:-3px;transition:transform .15s ease}.inlineProjectOpen.expanded .projectRowChevron{transform:rotate(225deg);margin-top:4px}.projectChildren{margin:0 0 4px 14px;padding-left:9px;border-left:1px solid rgba(255,255,255,.08)}.projectChildRow{display:flex;align-items:center;min-height:35px;border-radius:8px}.projectChildRow:active{background:#151d2a}.projectChildOpen{flex:1;min-width:0;border:0;background:transparent;text-align:left;color:#cfd8e8;padding:7px 8px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.projectChildMore{border:0;background:transparent;color:#65738b;padding:7px 9px}.projectChildNew{display:block;width:100%;border:0;background:transparent;text-align:left;color:#8291aa;padding:7px 8px;font-size:12px}.projectChildEmpty{color:#59667c;font-size:11px;padding:5px 8px 8px}
+
+/* Keep the main Chats button as a clean three-line hamburger */
+#menuBtn{font-size:0!important}
+#menuBtn .hamb{display:flex!important;width:18px!important;height:14px!important;flex-direction:column!important;justify-content:space-between!important;gap:0!important}
+#menuBtn .hamb i{display:block!important;width:18px!important;height:2px!important;background:#dce6ff!important;border-radius:2px!important}
