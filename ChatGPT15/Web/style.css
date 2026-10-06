@@ -152,3 +152,16 @@ body.theme-classic .chatRow:active,body.theme-classic .inlineProjectRow:active,b
 body.theme-classic #drawer button:active,body.theme-classic .sheet button:active{filter:none!important;box-shadow:none!important}
 body.theme-classic .secondary:active,body.theme-classic .field:active{background:#fff!important;color:#20242b!important}
 body.theme-classic .primary:active,body.theme-classic .roundBtn:active{background:#1677e8!important;color:#fff!important}
+
+/* Classic settings readability */
+body.theme-classic .apiSetup{background:#e8f1ff!important;border:1px solid #b8d3f5!important;color:#182333!important}
+body.theme-classic .apiSetup h3{color:#172235!important}
+body.theme-classic .apiSetup p{color:#44566d!important}
+body.theme-classic .apiSetup .secondary{background:#fff!important;color:#1d2733!important;border:1px solid #b8c7d8!important}
+body.theme-classic .apiSetup .textBtn{color:#086bd8!important}
+body.theme-classic #settingsSheet>label,body.theme-classic #projectEditSheet>label{color:#4f5967!important}
+body.theme-classic .keyRow .miniBtn{background:#e6eef9!important;color:#176bc7!important;border:1px solid #bdcde0!important}
+body.theme-classic .settingsText::placeholder,body.theme-classic .field::placeholder{color:#8a929d!important;opacity:1}
+body.theme-classic select.field{color:#20242b!important;background-color:#fff!important}
+body.theme-classic .toggleRow{color:#252b33!important}
+body.theme-classic .note{color:#626d7a!important}
