@@ -15,7 +15,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-final class WebViewController: UIViewController, WKNavigationDelegate, UIScrollViewDelegate {
+final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate {
     private var webView: WKWebView!
 
     override func viewDidLoad() {
@@ -23,10 +23,10 @@ final class WebViewController: UIViewController, WKNavigationDelegate, UIScrollV
         view.backgroundColor = UIColor(red: 5/255, green: 7/255, blue: 11/255, alpha: 1)
 
         let config = WKWebViewConfiguration()
-        config.websiteDataStore = .default()
+        config.websiteDataStore = .default()\n        config.preferences.javaScriptEnabled = true\n        config.preferences.setValue(true, forKey: \"allowFileAccessFromFileURLs\")\n        config.setValue(true, forKey: \"allowUniversalAccessFromFileURLs\")
 
         webView = WKWebView(frame: .zero, configuration: config)
-        webView.navigationDelegate = self
+        webView.navigationDelegate = self\n        webView.uiDelegate = self
         webView.scrollView.delegate = self
         webView.scrollView.bounces = false
         webView.scrollView.alwaysBounceVertical = false
@@ -58,7 +58,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, UIScrollV
         webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
+    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {\n        let alert = UIAlertController(title: \"ChatGPT 15\", message: message, preferredStyle: .alert)\n        alert.addAction(UIAlertAction(title: \"OK\", style: .default) { _ in completionHandler() })\n        present(alert, animated: true)\n    }\n\n    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return nil
