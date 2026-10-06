@@ -1,6 +1,7 @@
 import UIKit
 import WebKit
-import LocalAuthentication\nimport PDFKit
+import LocalAuthentication
+import PDFKit
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,7 +32,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         config.userContentController.add(self, name: "openURL")
         config.userContentController.add(self, name: "haptic")
         config.userContentController.add(self, name: "touchID")
-        config.userContentController.add(self, name: "exportFile")\n        config.userContentController.add(self, name: "extractPDF")
+        config.userContentController.add(self, name: "exportFile")
+        config.userContentController.add(self, name: "extractPDF")
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -105,7 +107,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             guard let page = document.page(at: index) else { continue }
             let text = page.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if !text.isEmpty {
-                pages.append("[Page \(index + 1)]\n" + text)
+                pages.append("[Page \(index + 1)]
+" + text)
             }
         }
 
@@ -114,7 +117,9 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             return
         }
 
-        let joined = pages.joined(separator: "\n\n")
+        let joined = pages.joined(separator: "
+
+")
         let escaped = joined
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "`", with: "\\`")
@@ -150,6 +155,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"haptic")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")
-        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"extractPDF")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"extractPDF")
     }
 }
