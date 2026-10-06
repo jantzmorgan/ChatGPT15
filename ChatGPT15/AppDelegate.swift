@@ -1,5 +1,6 @@
 import UIKit
-import WebKit\nimport LocalAuthentication
+import WebKit
+import LocalAuthentication
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,7 +28,10 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.userContentController.add(self, name: "share")
-        config.userContentController.add(self, name: "openURL")\n        config.userContentController.add(self, name: "haptic")\n        config.userContentController.add(self, name: "touchID")\n        config.userContentController.add(self, name: "exportFile")
+        config.userContentController.add(self, name: "openURL")
+        config.userContentController.add(self, name: "haptic")
+        config.userContentController.add(self, name: "touchID")
+        config.userContentController.add(self, name: "exportFile")
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -100,6 +104,9 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
 
     deinit {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"share")
-        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"haptic")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"haptic")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
     }
 }
