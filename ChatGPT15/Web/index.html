@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+
+	<meta name="viewport" content="
+      width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      minimum-scale=1.0,
+      user-scalable=no,
+      viewport-fit=cover
+    ">
+
+	<meta name="theme-color" content="#05070b">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<title>ChatGPT 15</title>
+
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<!-- MAIN APP -->
+
+	<div id="app">
+
+		<header id="header">
+
+			<button id="menuButton" class="headerButton" type="button" aria-label="Chats">
+				＋
+			</button>
+
+			<div class="titleArea">
+				<div class="title">
+					ChatGPT 15
+				</div>
+
+				<div class="subtitle">
+					iPhone 7 Edition
+				</div>
+			</div>
+
+			<button id="settingsButton" class="headerButton" type="button" aria-label="Settings">
+				⚙
+			</button>
+
+		</header>
+
+
+		<!-- CHAT AREA -->
+
+		<main id="messages">
+
+			<div class="welcome" id="welcome">
+
+				<div class="orb">
+					✦
+				</div>
+
+				<h1>
+					What can I help with?
+				</h1>
+
+				<p>
+					A lightweight AI client built for iOS 15.
+				</p>
+
+			</div>
+
+		</main>
+
+
+		<!-- COMPOSER -->
+
+		<div id="composerArea">
+
+			<div id="composer">
+
+				<textarea id="messageInput" placeholder="Message ChatGPT" rows="1" enterkeyhint="send" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true"></textarea>
+
+				<button id="sendButton" type="button" aria-label="Send">
+					↑
+				</button>
+
+			</div>
+
+			<div class="footerText">
+				AI can make mistakes. Check important information.
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- CHAT MENU -->
+
+	<div id="chatOverlay" class="overlay hidden">
+
+		<div id="chatPanel">
+
+			<div class="panelHandle"></div>
+
+			<div class="panelHeader">
+
+				<h2>Chats</h2>
+
+				<button id="closeChatPanel" class="roundButton" type="button">
+					✕
+				</button>
+
+			</div>
+
+			<button id="newChatButton" class="primaryPanelButton" type="button">
+				＋ New Chat
+			</button>
+
+			<div class="emptyHistory">
+				Your conversations will appear here.
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- SETTINGS -->
+
+	<div id="settingsOverlay" class="overlay hidden">
+
+		<div id="settingsPanel">
+
+			<div class="panelHandle"></div>
+
+			<div class="panelHeader">
+
+				<h2>Settings</h2>
+
+				<button id="closeSettings" class="roundButton" type="button">
+					✕
+				</button>
+
+			</div>
+
+			<label for="apiKeyInput">
+				OpenAI API Key
+			</label>
+
+			<input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+
+			<label for="modelSelect">
+				Model
+			</label>
+
+			<select id="modelSelect">
+				<option value="gpt-5.6">
+					GPT-5.6
+				</option>
+
+				<option value="gpt-5.6-mini">
+					GPT-5.6 Mini
+				</option>
+			</select>
+
+			<button id="saveSettings" class="primaryPanelButton" type="button">
+				Save Settings
+			</button>
+
+			<p class="settingsNote">
+				Your API key is stored locally on this device.
+			</p>
+
+		</div>
+
+	</div>
+
+
+	<script src="app.js"></script>
+
+</body>
+
+</html>
