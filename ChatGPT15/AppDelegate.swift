@@ -1,5 +1,5 @@
 import UIKit
-import WebKit
+import WebKit\nimport LocalAuthentication
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,7 +27,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.userContentController.add(self, name: "share")
-        config.userContentController.add(self, name: "openURL")
+        config.userContentController.add(self, name: "openURL")\n        config.userContentController.add(self, name: "haptic")\n        config.userContentController.add(self, name: "touchID")\n        config.userContentController.add(self, name: "exportFile")
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -59,6 +59,15 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             if let p = vc.popoverPresentationController { p.sourceView = view; p.sourceRect = CGRect(x:view.bounds.midX,y:view.bounds.maxY-30,width:1,height:1) }
             present(vc, animated: true)
         } else if message.name == "openURL", let url = URL(string:value) { UIApplication.shared.open(url) }
+        else if message.name == "haptic" { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+        else if message.name == "exportFile" {
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent("Luma-Backup.json")
+            try? value.data(using: .utf8)?.write(to: url)
+            let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+            if let p = vc.popoverPresentationController { p.sourceView = view; p.sourceRect = CGRect(x:view.bounds.midX,y:view.bounds.maxY-30,width:1,height:1) }
+            present(vc, animated: true)
+        }
+        else if message.name == "touchID" { handleTouchID() }
     }
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let a = UIAlertController(title:"ChatGPT 15", message:message, preferredStyle:.alert)
@@ -74,8 +83,23 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         a.addAction(UIAlertAction(title:"Cancel",style:.cancel){_ in completionHandler(nil)})
         a.addAction(UIAlertAction(title:"Save",style:.default){_ in completionHandler(a.textFields?.first?.text)});present(a,animated:true)
     }
+    private func handleTouchID() {
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            let a = UIAlertController(title:"Touch ID",message:"Touch ID is not available or configured on this device.",preferredStyle:.alert)
+            a.addAction(UIAlertAction(title:"OK",style:.default));present(a,animated:true);return
+        }
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason:"Unlock Luma") { success, _ in
+            DispatchQueue.main.async {
+                let a=UIAlertController(title:"Touch ID",message:success ? "Touch ID verified. App-lock support is ready for device testing." : "Touch ID verification failed.",preferredStyle:.alert)
+                a.addAction(UIAlertAction(title:"OK",style:.default));self.present(a,animated:true)
+            }
+        }
+    }
+
     deinit {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"share")
-        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"haptic")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
     }
 }
