@@ -1,6 +1,6 @@
 import UIKit
 import WebKit
-import LocalAuthentication
+import LocalAuthentication\nimport PDFKit
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,7 +31,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         config.userContentController.add(self, name: "openURL")
         config.userContentController.add(self, name: "haptic")
         config.userContentController.add(self, name: "touchID")
-        config.userContentController.add(self, name: "exportFile")
+        config.userContentController.add(self, name: "exportFile")\n        config.userContentController.add(self, name: "extractPDF")
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -72,6 +72,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             present(vc, animated: true)
         }
         else if message.name == "touchID" { handleTouchID() }
+        else if message.name == "extractPDF" { handlePDFExtraction(value) }
     }
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let a = UIAlertController(title:"ChatGPT 15", message:message, preferredStyle:.alert)
@@ -87,6 +88,48 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         a.addAction(UIAlertAction(title:"Cancel",style:.cancel){_ in completionHandler(nil)})
         a.addAction(UIAlertAction(title:"Save",style:.default){_ in completionHandler(a.textFields?.first?.text)});present(a,animated:true)
     }
+    private func handlePDFExtraction(_ dataURL: String) {
+        guard let comma = dataURL.firstIndex(of: ",") else {
+            sendPDFResult(error: "Invalid PDF data.")
+            return
+        }
+        let encoded = String(dataURL[dataURL.index(after: comma)...])
+        guard let data = Data(base64Encoded: encoded, options: .ignoreUnknownCharacters),
+              let document = PDFDocument(data: data) else {
+            sendPDFResult(error: "Luma could not open this PDF.")
+            return
+        }
+
+        var pages: [String] = []
+        for index in 0..<document.pageCount {
+            guard let page = document.page(at: index) else { continue }
+            let text = page.string?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if !text.isEmpty {
+                pages.append("[Page \(index + 1)]\n" + text)
+            }
+        }
+
+        if pages.isEmpty {
+            sendPDFResult(error: "This PDF does not contain extractable text. Scanned PDFs need OCR, which is not included yet.")
+            return
+        }
+
+        let joined = pages.joined(separator: "\n\n")
+        let escaped = joined
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "$", with: "\\$")
+        webView.evaluateJavaScript("window.LumaNativePDF && window.LumaNativePDF.success(`\(escaped)`)") { _, _ in }
+    }
+
+    private func sendPDFResult(error: String) {
+        let escaped = error
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "$", with: "\\$")
+        webView.evaluateJavaScript("window.LumaNativePDF && window.LumaNativePDF.failure(`\(escaped)`)") { _, _ in }
+    }
+
     private func handleTouchID() {
         let context = LAContext()
         var error: NSError?
@@ -107,6 +150,6 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"openURL")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"haptic")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")
-        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")\n        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"extractPDF")
     }
 }
