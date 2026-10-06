@@ -92,3 +92,56 @@ body.theme-classic #app{background:linear-gradient(#eef0f4,#cfd3da)!important;co
 body.theme-aurora{--bg:#090617;--panel:#16102b;--panel2:#20143a;--blue:#7d5cff;--text:#fff;--muted:#b5a7d2;--line:rgba(207,155,255,.18)}
 body.theme-aurora #app{background:radial-gradient(circle at 15% 5%,rgba(0,229,255,.32),transparent 32%),radial-gradient(circle at 90% 20%,rgba(255,59,178,.3),transparent 34%),linear-gradient(155deg,#090617 15%,#171034 55%,#071a28)!important}
 body.theme-aurora header{background:rgba(14,8,31,.88)!important;border-color:rgba(104,229,255,.18)}body.theme-aurora footer{background:rgba(8,5,20,.92)!important}body.theme-aurora .composer{background:rgba(26,17,51,.9);border-color:rgba(111,224,255,.35)}body.theme-aurora .user .bubble{background:linear-gradient(135deg,#7b4dff,#e243bb)!important}body.theme-aurora .assistant .bubble{background:linear-gradient(145deg,rgba(22,30,61,.96),rgba(42,19,65,.96));border-color:rgba(110,220,255,.18)}body.theme-aurora .sendBtn{background:linear-gradient(135deg,#00c9ff,#8a52ff 55%,#f34ab9)!important}body.theme-aurora .orb{background:linear-gradient(135deg,#00dcff,#7952ff,#ff4bb8);box-shadow:0 10px 40px rgba(137,72,255,.42)}body.theme-aurora .sheet,body.theme-aurora #drawer{background:linear-gradient(165deg,#15102b,#0a1323)}body.theme-aurora .iconBtn{background:linear-gradient(145deg,#1d3150,#351b55)}body.theme-aurora .primary{background:linear-gradient(135deg,#00bce7,#7855ff,#e44ab4)}
+
+/* Theme coherence pass: same component geometry, different palettes */
+body.theme-classic{--bg:#eef0f3;--panel:#f8f8fa;--panel2:#fff;--blue:#1677e8;--text:#16181d;--muted:#68717e;--line:rgba(20,28,38,.16)}
+body.theme-classic #app{background:#eef0f3!important;color:var(--text)}
+body.theme-classic header{background:#f7f8fa!important;border-bottom:1px solid #c9ced5}
+body.theme-classic footer{background:#e9ecf0!important;border-top:1px solid #c9ced5}
+body.theme-classic .composer{background:#fff!important;border:1px solid #b9c0ca!important;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+body.theme-classic #prompt{color:#17191d!important}body.theme-classic #prompt::placeholder{color:#8a929d}
+body.theme-classic .assistant .bubble{background:#fff!important;color:#222!important;border:1px solid #c7ccd3!important}
+body.theme-classic .user .bubble{background:#1677e8!important;color:#fff!important}
+body.theme-classic .msgTools button,body.theme-classic .editUserBtn{color:#66717e!important}
+body.theme-classic .sheet,body.theme-classic #drawer{background:#f5f6f8!important;color:#17191d!important}
+body.theme-classic .secondary,body.theme-classic .field{background:#fff!important;color:#20242b!important;border-color:#c8cdd4!important}
+body.theme-classic .chatOpen,body.theme-classic .projectChildOpen,body.theme-classic .inlineProjectOpen,body.theme-classic .inlineNewProject{color:#20242b!important}
+body.theme-classic .chatDate,body.theme-classic .note,body.theme-classic .usageLine{color:#6d7580!important}
+body.theme-classic .iconBtn{background:#fff!important;color:#1677e8!important;border:1px solid #c7ccd3!important}
+body.theme-classic .attachBtn{background:#1677e8!important;color:#fff!important}
+body.theme-classic .sendBtn{background:#1677e8!important}
+body.theme-classic .sendArrow:before{background:#fff!important}body.theme-classic .sendArrow:after{border-color:#fff!important}
+body.theme-classic .roundBtn{background:#1677e8!important;color:#fff!important}
+body.theme-classic .primary{background:#1677e8!important;color:#fff!important}
+
+body.theme-oled{--bg:#000;--panel:#050505;--panel2:#0a0a0a;--blue:#2d8cff;--text:#f5f7fa;--muted:#858b94;--line:rgba(255,255,255,.12)}
+body.theme-oled #app,body.theme-oled header,body.theme-oled footer{background:#000!important}
+body.theme-oled header{border-color:#161616}body.theme-oled footer{border-color:#161616}
+body.theme-oled .composer{background:#090909!important;border-color:#242424!important}
+body.theme-oled .assistant .bubble{background:#0b0b0b!important;border-color:#1d1d1d!important}
+body.theme-oled .user .bubble{background:#171717!important;border:1px solid #292929!important}
+body.theme-oled .iconBtn,body.theme-oled .attachBtn{background:#101010!important;border:1px solid #262626!important}
+body.theme-oled .sendBtn,body.theme-oled .primary{background:#2d8cff!important}
+body.theme-oled .sendArrow:before{background:#fff!important}body.theme-oled .sendArrow:after{border-color:#fff!important}
+body.theme-oled .sheet,body.theme-oled #drawer{background:#050505!important}
+body.theme-oled .field,body.theme-oled .secondary{background:#0b0b0b!important;border-color:#222!important}
+body.theme-oled .roundBtn{background:#141414!important}
+
+body.theme-aurora{--bg:#090b22;--panel:#101633;--panel2:#151c40;--blue:#7b61ff;--text:#f8f8ff;--muted:#b1b5d0;--line:rgba(141,173,255,.2)}
+body.theme-aurora #app{background:radial-gradient(circle at 0% 8%,rgba(0,202,255,.24),transparent 28%),radial-gradient(circle at 100% 28%,rgba(255,52,190,.22),transparent 30%),linear-gradient(160deg,#08132b 0%,#18134a 55%,#081a31 100%)!important}
+body.theme-aurora header{background:rgba(10,15,42,.94)!important;border-color:rgba(120,166,255,.2)}
+body.theme-aurora footer{background:rgba(8,12,34,.96)!important;border-color:rgba(120,166,255,.16)}
+body.theme-aurora .composer{background:rgba(16,26,59,.96)!important;border-color:rgba(79,203,255,.48)!important;box-shadow:0 0 0 1px rgba(132,82,255,.18),0 0 20px rgba(52,132,255,.12)}
+body.theme-aurora .assistant .bubble{background:rgba(18,28,65,.94)!important;border:1px solid rgba(111,170,255,.25)!important}
+body.theme-aurora .user .bubble{background:linear-gradient(135deg,#7259ff,#d94dcc)!important}
+body.theme-aurora .sendBtn{background:linear-gradient(135deg,#19bff3,#765dff)!important}
+body.theme-aurora .attachBtn,body.theme-aurora .iconBtn{background:rgba(33,53,102,.92)!important;border:1px solid rgba(105,170,255,.25)!important}
+body.theme-aurora .orb{background:linear-gradient(135deg,#1ad6ff,#765dff,#e84cbf)!important;box-shadow:0 10px 32px rgba(91,88,255,.3)}
+body.theme-aurora .sheet,body.theme-aurora #drawer{background:linear-gradient(165deg,#101735,#121044)!important}
+body.theme-aurora .field,body.theme-aurora .secondary{background:rgba(18,31,67,.9)!important;border-color:rgba(110,166,255,.2)!important}
+body.theme-aurora .primary{background:linear-gradient(135deg,#20bde8,#745cff)!important}
+body.theme-aurora .roundBtn{background:#315cbb!important}
+
+/* Keep drawer/list geometry identical in every theme */
+#drawer .secondary,#drawer .primary,#drawer .field,#drawer .projectsToggle{min-height:42px;border-radius:11px;margin-bottom:6px}
+.chatRow{border-radius:10px;margin:2px 0}.chatOpen{min-height:48px}.inlineProjectRow{min-height:40px}
