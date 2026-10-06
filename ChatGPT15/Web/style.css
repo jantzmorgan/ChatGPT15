@@ -75,3 +75,9 @@
 .attachCard button::before,.attachCard button::after,.fileAttachRemove::before,.fileAttachRemove::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:1.5px;background:#eef4ff;border-radius:2px;transform-origin:center}
 .attachCard button::before,.fileAttachRemove::before{transform:translate(-50%,-50%) rotate(45deg)}
 .attachCard button::after,.fileAttachRemove::after{transform:translate(-50%,-50%) rotate(-45deg)}
+
+/* Geometrically centered attachment remove buttons */
+.fileAttachRemove,.attachCard button{position:relative;font-size:0!important;line-height:0!important;padding:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}
+.fileAttachRemove::before,.fileAttachRemove::after,.attachCard button::before,.attachCard button::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:1.5px;background:#f5f7ff;border-radius:2px;transform-origin:center}
+.fileAttachRemove::before,.attachCard button::before{transform:translate(-50%,-50%) rotate(45deg)}
+.fileAttachRemove::after,.attachCard button::after{transform:translate(-50%,-50%) rotate(-45deg)}
