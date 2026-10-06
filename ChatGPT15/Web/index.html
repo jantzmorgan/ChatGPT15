@@ -1,188 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-
-	<meta name="viewport" content="
-      width=device-width,
-      initial-scale=1.0,
-      maximum-scale=1.0,
-      minimum-scale=1.0,
-      user-scalable=no,
-      viewport-fit=cover
-    ">
-
-	<meta name="theme-color" content="#05070b">
-
-	<meta name="apple-mobile-web-app-capable" content="yes">
-
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-	<title>ChatGPT 15</title>
-
-	<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#05070b">
+<title>ChatGPT 15</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div id="app">
+  <header id="header">
+    <button id="menuButton" class="headerButton" type="button">☰</button>
+    <button id="modelButton" class="modelButton" type="button"><span id="headerModel">GPT-6 Luna</span><small>⌄</small></button>
+    <button id="settingsButton" class="headerButton" type="button">⚙</button>
+  </header>
 
-	<!-- MAIN APP -->
+  <main id="messages">
+    <div class="welcome" id="welcome">
+      <div class="orb">✦</div>
+      <h1>What can I help with?</h1>
+      <p>ChatGPT-style AI for iOS 15.</p>
+    </div>
+  </main>
 
-	<div id="app">
+  <div id="attachmentPreview" class="attachmentPreview hidden"></div>
 
-		<header id="header">
+  <div id="composerArea">
+    <div id="composer">
+      <button id="attachButton" class="composerTool" type="button">＋</button>
+      <textarea id="messageInput" placeholder="Message" rows="1" enterkeyhint="send" autocorrect="on" autocapitalize="sentences"></textarea>
+      <button id="sendButton" type="button">↑</button>
+    </div>
+    <div class="footerText" id="usageText">AI can make mistakes.</div>
+  </div>
+</div>
 
-			<button id="menuButton" class="headerButton" type="button" aria-label="Chats">
-				＋
-			</button>
+<div id="sidebarOverlay" class="overlay hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="sideTop"><h2>Chats</h2><button id="closeSidebar" class="roundButton">✕</button></div>
+    <button id="newChatButton" class="primaryPanelButton">＋ New Chat</button>
+    <div class="searchWrap"><input id="chatSearch" type="search" placeholder="Search chats"></div>
+    <div id="chatList" class="chatList"></div>
+  </aside>
+</div>
 
-			<div class="titleArea">
-				<div class="title">
-					ChatGPT 15
-				</div>
+<div id="settingsOverlay" class="overlay hidden">
+  <section id="settingsPanel" class="sheet">
+    <div class="panelHandle"></div>
+    <div class="sideTop"><h2>Settings</h2><button id="closeSettings" class="roundButton">✕</button></div>
+    <label>OpenAI API Key</label>
+    <input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off">
+    <label>Model</label>
+    <select id="modelSelect">
+      <option value="gpt-6-luna">GPT-6 Luna</option>
+      <option value="gpt-6.1-sol">GPT-6.1 Sol</option>
+      <option value="gpt-6-astra">GPT-6 Astra</option>
+    </select>
+    <label>System instructions</label>
+    <textarea id="systemPrompt" class="settingsTextarea" rows="3" placeholder="Optional instructions"></textarea>
+    <label class="switchRow"><span>Show token usage</span><input id="usageToggle" type="checkbox"></label>
+    <button id="saveSettings" class="primaryPanelButton">Save Settings</button>
+    <p class="settingsNote">Your API key and chats stay on this device.</p>
+  </section>
+</div>
 
-				<div class="subtitle">
-					iPhone 7 Edition
-				</div>
-			</div>
+<div id="modelOverlay" class="overlay hidden">
+  <section id="modelPanel" class="sheet compactSheet">
+    <div class="panelHandle"></div>
+    <h2>Choose model</h2>
+    <button class="modelChoice" data-model="gpt-6-luna">GPT-6 Luna <span>Fast & inexpensive</span></button>
+    <button class="modelChoice" data-model="gpt-6.1-sol">GPT-6.1 Sol <span>More capable</span></button>
+    <button class="modelChoice" data-model="gpt-6-astra">GPT-6 Astra <span>Most capable</span></button>
+  </section>
+</div>
 
-			<button id="settingsButton" class="headerButton" type="button" aria-label="Settings">
-				⚙
-			</button>
+<div id="messageMenu" class="overlay hidden">
+  <section class="sheet compactSheet">
+    <div class="panelHandle"></div>
+    <button id="copyMessage" class="menuAction">Copy response</button>
+    <button id="retryMessage" class="menuAction">Regenerate</button>
+    <button id="shareMessage" class="menuAction">Share</button>
+    <button id="cancelMessageMenu" class="menuAction dimAction">Cancel</button>
+  </section>
+</div>
 
-		</header>
-
-
-		<!-- CHAT AREA -->
-
-		<main id="messages">
-
-			<div class="welcome" id="welcome">
-
-				<div class="orb">
-					✦
-				</div>
-
-				<h1>
-					What can I help with?
-				</h1>
-
-				<p>
-					A lightweight AI client built for iOS 15.
-				</p>
-
-			</div>
-
-		</main>
-
-
-		<!-- COMPOSER -->
-
-		<div id="composerArea">
-
-			<div id="composer">
-
-				<textarea id="messageInput" placeholder="Message ChatGPT" rows="1" enterkeyhint="send" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true"></textarea>
-
-				<button id="sendButton" type="button" aria-label="Send">
-					↑
-				</button>
-
-			</div>
-
-			<div class="footerText">
-				AI can make mistakes. Check important information.
-			</div>
-
-		</div>
-
-	</div>
-
-
-	<!-- CHAT MENU -->
-
-	<div id="chatOverlay" class="overlay hidden">
-
-		<div id="chatPanel">
-
-			<div class="panelHandle"></div>
-
-			<div class="panelHeader">
-
-				<h2>Chats</h2>
-
-				<button id="closeChatPanel" class="roundButton" type="button">
-					✕
-				</button>
-
-			</div>
-
-			<button id="newChatButton" class="primaryPanelButton" type="button">
-				＋ New Chat
-			</button>
-
-			<div class="emptyHistory">
-				Your conversations will appear here.
-			</div>
-
-		</div>
-
-	</div>
-
-
-	<!-- SETTINGS -->
-
-	<div id="settingsOverlay" class="overlay hidden">
-
-		<div id="settingsPanel">
-
-			<div class="panelHandle"></div>
-
-			<div class="panelHeader">
-
-				<h2>Settings</h2>
-
-				<button id="closeSettings" class="roundButton" type="button">
-					✕
-				</button>
-
-			</div>
-
-			<label for="apiKeyInput">
-				OpenAI API Key
-			</label>
-
-			<input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
-
-			<label for="modelSelect">
-				Model
-			</label>
-
-			<select id="modelSelect">
-				<option value="gpt-6-luna">
-					GPT-6 Luna
-				</option>
-
-				<option value="gpt-6-sol">
-					GPT-6 Sol
-				</option>
-			</select>
-
-			<button id="saveSettings" class="primaryPanelButton" type="button">
-				Save Settings
-			</button>
-
-			<p class="settingsNote">
-				Your API key is stored locally on this device.
-			</p>
-
-		</div>
-
-	</div>
-
-
-	<script src="app.js"></script>
-
+<input id="imagePicker" type="file" accept="image/*" class="hidden">
+<script src="app.js"></script>
 </body>
-
 </html>
