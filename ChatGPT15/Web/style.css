@@ -61,3 +61,5 @@
 .pinMark{position:relative;display:inline-block;width:10px;height:13px;margin-right:6px;vertical-align:-2px;font-size:0}
 .pinMark::before{content:"";position:absolute;left:2px;top:1px;width:6px;height:7px;border-radius:4px 4px 3px 3px;background:#78a7ff;transform:rotate(12deg)}
 .pinMark::after{content:"";position:absolute;left:4.5px;top:7px;width:1.5px;height:6px;background:#78a7ff;transform:rotate(12deg);transform-origin:top center}
+
+.chatHeaderTitle{flex:1;min-width:0;text-align:center;font-size:16px;line-height:20px;font-weight:680;padding:10px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f5f7ff}
