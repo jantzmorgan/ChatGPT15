@@ -5,7 +5,7 @@
   <key>CFBundleDisplayName</key><string>ChatGPT 15</string>
   <key>CFBundleExecutable</key><string>ChatGPT15</string>
   <key>CFBundleIdentifier</key><string>com.jantzmorgan.chatgpt15</string>
-  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+  <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>\n  <key>CFBundleIconFiles</key><array><string>AppIcon.png</string></array>\n  <key>CFBundleIcons</key><dict><key>CFBundlePrimaryIcon</key><dict><key>CFBundleIconFiles</key><array><string>AppIcon</string></array><key>UIPrerenderedIcon</key><false/></dict></dict>
   <key>CFBundleName</key><string>ChatGPT15</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>1.0</string>
