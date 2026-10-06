@@ -165,3 +165,14 @@ body.theme-classic .settingsText::placeholder,body.theme-classic .field::placeho
 body.theme-classic select.field{color:#20242b!important;background-color:#fff!important}
 body.theme-classic .toggleRow{color:#252b33!important}
 body.theme-classic .note{color:#626d7a!important}
+
+/* iOS touch behavior: never flash rows black in any theme */
+html,body,#app,button,a,input,textarea,select,.chatRow,.chatOpen,.inlineProjectRow,.inlineProjectOpen,.projectChildRow,.projectChildOpen,.projectRow,.projectOpen,.skillRow,.archiveRow,.actionBtn,.secondary,.primary{-webkit-tap-highlight-color:rgba(0,0,0,0)!important}
+.chatRow:active,.chatOpen:active,.inlineProjectRow:active,.inlineProjectOpen:active,.projectChildRow:active,.projectChildOpen:active,.projectRow:active,.projectOpen:active,.skillRow:active,.archiveRow:active{filter:none!important;box-shadow:none!important}
+body.theme-aurora .chatRow:active,body.theme-aurora .chatOpen:active,body.theme-aurora .inlineProjectRow:active,body.theme-aurora .inlineProjectOpen:active,body.theme-aurora .projectChildRow:active,body.theme-aurora .projectChildOpen:active{background:transparent!important;color:inherit!important}
+body.theme-oled .chatRow:active,body.theme-oled .chatOpen:active,body.theme-oled .inlineProjectRow:active,body.theme-oled .inlineProjectOpen:active,body.theme-oled .projectChildRow:active,body.theme-oled .projectChildOpen:active{background:transparent!important;color:inherit!important}
+
+/* Hamburger always visible with theme-correct contrast */
+body.theme-classic .hamb i{background:#1677e8!important;opacity:1!important}
+body.theme-aurora .hamb i{background:#f4f7ff!important;opacity:1!important}
+body.theme-oled .hamb i{background:#f4f7ff!important;opacity:1!important}
