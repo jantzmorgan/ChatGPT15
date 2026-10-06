@@ -176,3 +176,6 @@ body.theme-oled .chatRow:active,body.theme-oled .chatOpen:active,body.theme-oled
 body.theme-classic .hamb i{background:#1677e8!important;opacity:1!important}
 body.theme-aurora .hamb i{background:#f4f7ff!important;opacity:1!important}
 body.theme-oled .hamb i{background:#f4f7ff!important;opacity:1!important}
+
+/* Stronger Classic hamburger contrast */
+body.theme-classic #menuBtn .hamb i{background:#1f2937!important;opacity:1!important;height:2px!important}
