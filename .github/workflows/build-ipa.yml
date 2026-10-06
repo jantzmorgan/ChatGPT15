@@ -23,7 +23,7 @@ jobs:
             -target arm64-apple-ios15.0 \
             -sdk "$SDK" \
             -framework UIKit \
-            -framework WebKit \\
+            -framework WebKit \
             -framework LocalAuthentication \
             ChatGPT15/AppDelegate.swift \
             -o build/Payload/ChatGPT15.app/ChatGPT15
@@ -38,11 +38,11 @@ jobs:
       - name: Create IPA
         run: |
           cd build
-          /usr/bin/zip -qry ChatGPT15.ipa Payload
+          /usr/bin/zip -qry Luma.ipa Payload
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: ChatGPT15-TrollStore
-          path: build/ChatGPT15.ipa
+          name: Luma-TrollStore
+          path: build/Luma.ipa
           if-no-files-found: error
