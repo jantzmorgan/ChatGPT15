@@ -20,25 +20,28 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 5/255, green: 7/255, blue: 11/255, alpha: 1)
+
+        let background = UIColor(red: 5.0/255.0, green: 7.0/255.0, blue: 11.0/255.0, alpha: 1.0)
+        view.backgroundColor = background
 
         let config = WKWebViewConfiguration()
-        config.websiteDataStore = .default()\n        config.preferences.javaScriptEnabled = true\n        config.preferences.setValue(true, forKey: \"allowFileAccessFromFileURLs\")\n        config.setValue(true, forKey: \"allowUniversalAccessFromFileURLs\")
+        config.websiteDataStore = .default()
+        config.preferences.javaScriptEnabled = true
+        config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
 
         webView = WKWebView(frame: .zero, configuration: config)
-        webView.navigationDelegate = self\n        webView.uiDelegate = self
+        webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.scrollView.delegate = self
         webView.scrollView.bounces = false
         webView.scrollView.alwaysBounceVertical = false
         webView.scrollView.alwaysBounceHorizontal = false
         webView.scrollView.keyboardDismissMode = .interactive
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.isOpaque = false
-        webView.backgroundColor = view.backgroundColor
-        webView.scrollView.backgroundColor = view.backgroundColor
-
-        if #available(iOS 11.0, *) {
-            webView.scrollView.contentInsetAdjustmentBehavior = .never
-        }
+        webView.backgroundColor = background
+        webView.scrollView.backgroundColor = background
 
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
@@ -58,10 +61,23 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
     }
 
-    func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {\n        let alert = UIAlertController(title: \"ChatGPT 15\", message: message, preferredStyle: .alert)\n        alert.addAction(UIAlertAction(title: \"OK\", style: .default) { _ in completionHandler() })\n        present(alert, animated: true)\n    }\n\n    override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return nil
+    }
+
+    func webView(_ webView: WKWebView,
+                 runJavaScriptAlertPanelWithMessage message: String,
+                 initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping () -> Void) {
+        let alert = UIAlertController(title: "ChatGPT 15", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            completionHandler()
+        })
+        present(alert, animated: true)
     }
 
     private func showLoadError(_ message: String) {
@@ -72,6 +88,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
+
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
