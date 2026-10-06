@@ -30,3 +30,13 @@
 .modelBtn{display:flex;align-items:center;justify-content:center;line-height:20px}
 #modelLabel{display:inline-flex;align-items:center;line-height:20px}
 .chev{display:inline-flex;align-items:center;justify-content:center;height:20px;line-height:20px;margin-left:6px;position:relative;top:-1px}
+
+.projectsToggle{display:flex!important;align-items:center;justify-content:space-between!important}
+.projectsChevron{width:8px;height:8px;border-right:2px solid #7f8ba1;border-bottom:2px solid #7f8ba1;transform:rotate(45deg);margin-right:5px;margin-top:-4px;transition:transform .16s ease,margin-top .16s ease}
+.projectsToggle.open .projectsChevron{transform:rotate(225deg);margin-top:5px}
+.inlineProjects{margin:0 0 8px 12px;padding-left:8px;border-left:1px solid rgba(255,255,255,.08)}
+.inlineProjectRow{display:flex;align-items:center;min-height:38px;border-radius:9px}
+.inlineProjectRow:active{background:#151d2a}
+.inlineProjectOpen{flex:1;min-width:0;border:0;background:transparent;text-align:left;padding:8px 9px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inlineProjectMore{border:0;background:transparent;color:#718098;padding:9px 11px}
+.inlineNewProject{width:100%;border:0;background:transparent;color:#8491a7;text-align:left;padding:8px 9px;font-size:13px}
