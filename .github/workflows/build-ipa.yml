@@ -1,0 +1,46 @@
+name: Build TrollStore IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build app executable
+        run: |
+          set -e
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          mkdir -p build/Payload/ChatGPT15.app/Web
+
+          xcrun --sdk iphoneos swiftc \
+            -target arm64-apple-ios15.0 \
+            -sdk "$SDK" \
+            -framework UIKit \
+            -framework WebKit \
+            ChatGPT15/AppDelegate.swift \
+            -o build/Payload/ChatGPT15.app/ChatGPT15
+
+          cp ChatGPT15/Info.plist build/Payload/ChatGPT15.app/Info.plist
+          cp ChatGPT15/Web/index.html build/Payload/ChatGPT15.app/Web/index.html
+          cp ChatGPT15/Web/style.css build/Payload/ChatGPT15.app/Web/style.css
+          cp ChatGPT15/Web/app.js build/Payload/ChatGPT15.app/Web/app.js
+
+          chmod +x build/Payload/ChatGPT15.app/ChatGPT15
+
+      - name: Create IPA
+        run: |
+          cd build
+          /usr/bin/zip -qry ChatGPT15.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChatGPT15-TrollStore
+          path: build/ChatGPT15.ipa
+          if-no-files-found: error
