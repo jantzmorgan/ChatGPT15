@@ -24,7 +24,7 @@ jobs:
             -sdk "$SDK" \
             -framework UIKit \
             -framework WebKit \
-            -framework LocalAuthentication \\
+            -framework LocalAuthentication \
             -framework PDFKit \
             ChatGPT15/AppDelegate.swift \
             -o build/Payload/ChatGPT15.app/ChatGPT15
