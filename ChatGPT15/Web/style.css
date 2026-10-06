@@ -44,3 +44,5 @@
 /* Replace font chevron with geometrically centered CSS chevron */
 .chev{font-size:0!important;width:10px!important;height:20px!important;position:relative!important;top:0!important;margin:0 0 0 7px!important;display:inline-block!important;align-self:center!important}
 .chev::before{content:"";position:absolute;width:7px;height:7px;border-right:2px solid #78a8d8;border-bottom:2px solid #78a8d8;left:50%;top:50%;transform:translate(-50%,-68%) rotate(45deg);border-radius:1px}
+
+.destructiveAction{color:#ff7f88}.chatProjectChoices{margin:3px 0 8px;padding:4px 0 4px 10px;border-left:1px solid var(--line)}.chatProjectChoice{display:block;width:100%;border:0;background:transparent;text-align:left;color:#dce5f5;padding:10px;border-radius:9px;font-size:14px}.chatProjectChoice:active{background:#151d2a}.chatProjectChoice.current:after{content:"✓";float:right;color:#75a5ff}.chatProjectEmpty{color:var(--muted);font-size:12px;padding:9px}
