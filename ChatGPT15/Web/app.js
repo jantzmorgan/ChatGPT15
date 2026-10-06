@@ -1,102 +1,30 @@
-(function(){
-"use strict";
-function $(id){return document.getElementById(id)}
-var messages=$("messages"),input=$("messageInput"),send=$("sendButton"),menu=$("menuButton"),settings=$("settingsButton");
-var sidebarOverlay=$("sidebarOverlay"),sidebar=$("sidebar"),closeSidebar=$("closeSidebar"),newChat=$("newChatButton"),chatList=$("chatList"),chatSearch=$("chatSearch");
-var settingsOverlay=$("settingsOverlay"),settingsPanel=$("settingsPanel"),closeSettings=$("closeSettings"),saveSettings=$("saveSettings");
-var apiInput=$("apiKeyInput"),modelSelect=$("modelSelect"),systemPrompt=$("systemPrompt"),usageToggle=$("usageToggle"),usageText=$("usageText");
-var modelButton=$("modelButton"),headerModel=$("headerModel"),modelOverlay=$("modelOverlay"),modelPanel=$("modelPanel");
-var attach=$("attachButton"),picker=$("imagePicker"),preview=$("attachmentPreview");
-var messageMenu=$("messageMenu"),copyMessage=$("copyMessage"),retryMessage=$("retryMessage"),shareMessage=$("shareMessage"),cancelMessageMenu=$("cancelMessageMenu");
-var store={},chats=[],activeId=null,running=false,controller=null,pendingImage=null,selectedAssistantText="",lastUsage=null;
-var prices={"gpt-6-luna":[.05,.25],"gpt-6.1-sol":[1,5],"gpt-6-astra":[5,25]};
-
-function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return Object.prototype.hasOwnProperty.call(store,k)?store[k]:d}}
-function set(k,v){store[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
-function parse(k,d){try{return JSON.parse(get(k,""))||d}catch(e){return d}}
-function show(el){el.classList.remove("hidden")} function hide(el){el.classList.add("hidden")}
-function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function modelName(m){return m==="gpt-6.1-sol"?"GPT-6.1 Sol":m==="gpt-6-astra"?"GPT-6 Astra":"GPT-6 Luna"}
-var apiKey=get("openai_api_key",""),model=get("openai_model","gpt-6-luna"),instructions=get("system_prompt",""),showUsage=get("show_usage","0")==="1";
-chats=parse("chatgpt15_chats",[]);apiInput.value=apiKey;modelSelect.value=model;systemPrompt.value=instructions;usageToggle.checked=showUsage;headerModel.textContent=modelName(model);
-
-function persist(){set("chatgpt15_chats",JSON.stringify(chats))}
-function chat(){return chats.find(function(c){return c.id===activeId})||null}
-function makeChat(){var c={id:"c"+Date.now(),title:"New chat",created:Date.now(),updated:Date.now(),messages:[]};chats.unshift(c);activeId=c.id;persist();return c}
-function titleFrom(text){var t=String(text).replace(/\s+/g," ").trim();return t.length>34?t.slice(0,34)+"…":t||"New chat"}
-function renderSidebar(filter){
- chatList.innerHTML="";var q=(filter||"").toLowerCase();
- chats.filter(function(c){return !q||c.title.toLowerCase().indexOf(q)>=0}).forEach(function(c){
-  var row=document.createElement("div");row.className="chatRow";
-  var open=document.createElement("button");open.className="chatOpen";open.innerHTML='<span class="chatTitle">'+esc(c.title)+'</span><span class="chatMeta">'+new Date(c.updated).toLocaleDateString()+'</span>';
-  open.onclick=function(){activeId=c.id;renderChat();hide(sidebarOverlay)};
-  var del=document.createElement("button");del.className="chatDelete";del.textContent="✕";del.onclick=function(){if(confirm("Delete this chat?")){chats=chats.filter(function(x){return x.id!==c.id});if(activeId===c.id)activeId=null;persist();renderSidebar(chatSearch.value);renderChat()}};
-  row.appendChild(open);row.appendChild(del);chatList.appendChild(row);
- });
- if(!chatList.children.length){chatList.innerHTML='<div class="settingsNote">No chats yet.</div>'}
-}
-function renderChat(){
- messages.innerHTML="";var c=chat();
- if(!c||!c.messages.length){messages.innerHTML='<div class="welcome" id="welcome"><div class="orb">✦</div><h1>What can I help with?</h1><p>ChatGPT-style AI for iOS 15.</p></div>';return}
- c.messages.forEach(function(m){addBubble(m.role,m.text,m.image,false)});
- scrollBottom();
-}
-function markdown(text){
- var s=esc(text);var blocks=[];
- s=s.replace(/```([\s\S]*?)```/g,function(_,code){blocks.push("<pre><code>"+code+"</code></pre>");return "@@BLOCK"+(blocks.length-1)+"@@"});
- s=s.replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/^### (.+)$/gm,"<h3>$1</h3>").replace(/^## (.+)$/gm,"<h2>$1</h2>").replace(/^# (.+)$/gm,"<h1>$1</h1>");
- s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank">$1</a>').replace(/\n/g,"<br>");
- blocks.forEach(function(b,i){s=s.replace("@@BLOCK"+i+"@@",b)});return s;
-}
-function addBubble(role,text,image,animate){
- var wrap=document.createElement("div");wrap.className="message "+role;var bw=document.createElement("div");bw.className="bubbleWrap";var b=document.createElement("div");b.className="bubble markdown";
- if(image){var im=document.createElement("img");im.className="messageImage";im.src=image;b.appendChild(im)}
- var content=document.createElement("span");content.innerHTML=animate?'<span class="typingDots"><i></i><i></i><i></i></span>':markdown(text);b.appendChild(content);bw.appendChild(b);
- if(role==="assistant"&&!animate){var actions=document.createElement("div");actions.className="messageActions";var more=document.createElement("button");more.textContent="•••";more.onclick=function(){selectedAssistantText=text;show(messageMenu)};actions.appendChild(more);bw.appendChild(actions)}
- wrap.appendChild(bw);messages.appendChild(wrap);return {bubble:b,content:content,wrap:wrap};
-}
-function scrollBottom(){requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight})}
-function resize(){input.style.height="auto";input.style.height=Math.min(input.scrollHeight,126)+"px";input.style.overflowY=input.scrollHeight>126?"auto":"hidden"}
-function updateSend(){send.disabled=running||(!input.value.trim()&&!pendingImage);send.textContent=running?"■":"↑"}
-function setKeyboard(){var h=window.visualViewport?window.visualViewport.height:window.innerHeight;document.body.classList.toggle("keyboard-open",window.innerHeight-h>120)}
-if(window.visualViewport)window.visualViewport.addEventListener("resize",function(){setKeyboard();scrollBottom()});
-
-menu.onclick=function(){renderSidebar();show(sidebarOverlay)};closeSidebar.onclick=function(){hide(sidebarOverlay)};sidebarOverlay.onclick=function(e){if(e.target===sidebarOverlay)hide(sidebarOverlay)};sidebar.onclick=function(e){e.stopPropagation()};
-newChat.onclick=function(){activeId=null;renderChat();hide(sidebarOverlay);input.focus()};chatSearch.oninput=function(){renderSidebar(this.value)};
-settings.onclick=function(){show(settingsOverlay)};closeSettings.onclick=function(){hide(settingsOverlay)};settingsOverlay.onclick=function(e){if(e.target===settingsOverlay)hide(settingsOverlay)};settingsPanel.onclick=function(e){e.stopPropagation()};
-saveSettings.onclick=function(){if(!apiInput.value.trim()){alert("Enter your OpenAI API key.");return}apiKey=apiInput.value.trim();model=modelSelect.value;instructions=systemPrompt.value.trim();showUsage=usageToggle.checked;set("openai_api_key",apiKey);set("openai_model",model);set("system_prompt",instructions);set("show_usage",showUsage?"1":"0");headerModel.textContent=modelName(model);hide(settingsOverlay);renderUsage()};
-modelButton.onclick=function(){show(modelOverlay)};modelOverlay.onclick=function(e){if(e.target===modelOverlay)hide(modelOverlay)};modelPanel.onclick=function(e){e.stopPropagation()};
-Array.prototype.forEach.call(document.querySelectorAll(".modelChoice"),function(btn){btn.onclick=function(){model=this.getAttribute("data-model");modelSelect.value=model;headerModel.textContent=modelName(model);set("openai_model",model);hide(modelOverlay)}});
-
-attach.onclick=function(){picker.click()};picker.onchange=function(){var f=this.files&&this.files[0];if(!f)return;if(f.size>6*1024*1024){alert("Choose an image under 6 MB.");this.value="";return}var r=new FileReader();r.onload=function(){pendingImage=r.result;renderAttachment();updateSend()};r.readAsDataURL(f)};
-function renderAttachment(){if(!pendingImage){preview.classList.add("hidden");preview.innerHTML="";return}preview.classList.remove("hidden");preview.innerHTML='<div class="attachmentCard"><img src="'+pendingImage+'"><span>Image attached</span><button id="removeAttachment">✕</button></div>';$("removeAttachment").onclick=function(){pendingImage=null;picker.value="";renderAttachment();updateSend()}}
-
-input.oninput=function(){resize();updateSend()};input.onkeydown=function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}};send.onclick=function(){running?stopGeneration():sendMessage()};
-function buildInput(c){
- return c.messages.map(function(m){if(m.role==="user"&&m.image){return {role:"user",content:[{type:"input_text",text:m.text||"Describe this image."},{type:"input_image",image_url:m.image}]}}return {role:m.role,content:m.text}});
-}
-function extract(data){var out="";(data.output||[]).forEach(function(i){(i.content||[]).forEach(function(x){if(x.type==="output_text")out+=x.text||""})});return out}
-async function sendMessage(){
- var text=input.value.trim(),image=pendingImage;if(!text&&!image)return;if(!apiKey){show(settingsOverlay);return}
- var c=chat()||makeChat();if(c.messages.length===0)c.title=titleFrom(text||"Image chat");
- c.messages.push({role:"user",text:text,image:image||null});c.updated=Date.now();persist();input.value="";pendingImage=null;picker.value="";renderAttachment();resize();renderChat();
- var loading=addBubble("assistant","",null,true);running=true;updateSend();controller=new AbortController();
- try{
-  var body={model:model,input:buildInput(c),store:false};if(instructions)body.instructions=instructions;
-  var response=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+apiKey},body:JSON.stringify(body),signal:controller.signal});
-  var data=await response.json();if(!response.ok)throw new Error(data&&data.error&&data.error.message?data.error.message:"API request failed ("+response.status+")");
-  var answer=extract(data)||"The API returned no text.";loading.wrap.remove();c.messages.push({role:"assistant",text:answer});c.updated=Date.now();lastUsage=data.usage||null;persist();renderChat();renderUsage();
- }catch(e){loading.wrap.remove();if(e.name!=="AbortError"){c.messages.push({role:"assistant",text:"Error: "+(e.message||String(e))});persist();renderChat()}}
- finally{running=false;controller=null;updateSend();renderSidebar()}
-}
-function stopGeneration(){if(controller)controller.abort();running=false;updateSend()}
-function renderUsage(){if(!showUsage||!lastUsage){usageText.textContent="AI can make mistakes.";return}var i=lastUsage.input_tokens||0,o=lastUsage.output_tokens||0,p=prices[model]||[0,0],cost=(i/1000000*p[0])+(o/1000000*p[1]);usageText.textContent=i+" in • "+o+" out • ~$"+cost.toFixed(4)}
-function regenerate(){var c=chat();if(!c||!c.messages.length)return;while(c.messages.length&&c.messages[c.messages.length-1].role==="assistant")c.messages.pop();var last=c.messages.pop();if(!last)return;input.value=last.text||"";pendingImage=last.image||null;renderAttachment();persist();renderChat();sendMessage()}
-copyMessage.onclick=function(){copyText(selectedAssistantText);hide(messageMenu)};retryMessage.onclick=function(){hide(messageMenu);regenerate()};shareMessage.onclick=function(){hide(messageMenu);nativeShare(selectedAssistantText)};cancelMessageMenu.onclick=function(){hide(messageMenu)};
-function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).catch(function(){fallbackCopy(t)})}else fallbackCopy(t)}
-function fallbackCopy(t){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}
-function nativeShare(t){if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.share){window.webkit.messageHandlers.share.postMessage(t)}else if(navigator.share){navigator.share({text:t}).catch(function(){})}else copyText(t)}
-document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(a){e.preventDefault();if(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.openURL)window.webkit.messageHandlers.openURL.postMessage(a.href)}});
-document.addEventListener("gesturestart",function(e){e.preventDefault()});document.addEventListener("gesturechange",function(e){e.preventDefault()});
-resize();updateSend();renderChat();renderSidebar();renderUsage();window.__chatGPT15Ready=true;
-})();
+(function(){"use strict";
+function $(id){return document.getElementById(id)}function qa(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+var M=$("messages"),P=$("prompt"),S=$("sendBtn"),A=$("attachBtn"),picker=$("imagePicker"),AP=$("attachPreview"),usageLine=$("usageLine");
+var drawerO=$("drawerOverlay"),drawer=$("drawer"),chatList=$("chatList"),search=$("chatSearch"),settingsO=$("settingsOverlay"),settingsSheet=$("settingsSheet"),modelO=$("modelOverlay"),modelSheet=$("modelSheet"),menuO=$("msgMenuOverlay"),msgMenu=$("msgMenu");
+var keyInput=$("apiKey"),modelSelect=$("modelSelect"),instructionsInput=$("instructions"),usageToggle=$("usageToggle"),modelLabel=$("modelLabel");
+var mem={},chats=[],active=null,running=false,aborter=null,pendingImage=null,menuText="",lastUsage=null,normalH=window.innerHeight;
+function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return Object.prototype.hasOwnProperty.call(mem,k)?mem[k]:d}}function set(k,v){mem[k]=v;try{localStorage.setItem(k,v)}catch(e){}}function parse(k,d){try{var v=JSON.parse(get(k,""));return v||d}catch(e){return d}}
+var key=get("oai_key",""),model=get("oai_model","gpt-5.6-luna"),instructions=get("oai_instructions",""),showUsage=get("oai_usage","0")==="1";chats=parse("cg15_chats",[]);
+keyInput.value=key;modelSelect.value=model;instructionsInput.value=instructions;usageToggle.checked=showUsage;modelLabel.textContent=modelName(model);
+function modelName(x){return x==="gpt-5.6-sol"?"GPT-5.6 Sol":x==="gpt-5.6-terra"?"GPT-5.6 Terra":"GPT-5.6 Luna"}function show(x){x.classList.remove("hidden")}function hide(x){x.classList.add("hidden")}function saveChats(){set("cg15_chats",JSON.stringify(chats))}function current(){for(var i=0;i<chats.length;i++)if(chats[i].id===active)return chats[i];return null}
+function createChat(){var c={id:"c"+Date.now(),title:"New chat",created:Date.now(),updated:Date.now(),messages:[]};chats.unshift(c);active=c.id;saveChats();return c}function titleFor(t){t=(t||"Image chat").replace(/\s+/g," ").trim();return t.length>38?t.slice(0,38)+"…":t}
+function escapeHTML(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}function md(text){var s=escapeHTML(text),blocks=[];s=s.replace(/```([\s\S]*?)```/g,function(_,x){blocks.push("<pre><code>"+x+"</code></pre>");return "@@B"+(blocks.length-1)+"@@"});s=s.replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/^### (.+)$/gm,"<h3>$1</h3>").replace(/^## (.+)$/gm,"<h2>$1</h2>").replace(/^# (.+)$/gm,"<h1>$1</h1>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');var ps=s.split(/\n{2,}/).map(function(x){return x.indexOf("<pre>")===0||/^<h[123]>/.test(x)?x:"<p>"+x.replace(/\n/g,"<br>")+"</p>"}).join("");blocks.forEach(function(b,i){ps=ps.replace("@@B"+i+"@@",b)});return ps}
+function bubble(role,text,img,thinking){var row=document.createElement("div");row.className="message "+role;var w=document.createElement("div");w.className="bubbleWrap";var b=document.createElement("div");b.className="bubble";if(img){var im=document.createElement("img");im.className="messageImg";im.src=img;b.appendChild(im)}var t=document.createElement("div");t.className="bubbleText";t.innerHTML=thinking?'<div class="thinking"><i></i><i></i><i></i></div>':md(text);b.appendChild(t);w.appendChild(b);if(role==="assistant"&&!thinking){var tools=document.createElement("div");tools.className="msgTools";var copy=document.createElement("button");copy.textContent="Copy";copy.onclick=function(){copyText(text)};var more=document.createElement("button");more.textContent="•••";more.onclick=function(){menuText=text;show(menuO)};tools.appendChild(copy);tools.appendChild(more);w.appendChild(tools)}row.appendChild(w);M.appendChild(row);return{row:row,text:t}}
+function render(){M.innerHTML="";var c=current();if(!c||!c.messages.length){M.innerHTML='<section class="welcome"><div class="orb">✦</div><h1>What can I help with?</h1><p>ChatGPT for iOS 15</p></section>';return}c.messages.forEach(function(m){bubble(m.role,m.text,m.image,false)});bottom()}
+function renderChats(){var q=(search.value||"").toLowerCase();chatList.innerHTML="";chats.filter(function(c){return !q||c.title.toLowerCase().indexOf(q)>=0}).forEach(function(c){var r=document.createElement("div");r.className="chatRow";var o=document.createElement("button");o.className="chatOpen";o.innerHTML='<span class="chatTitle">'+escapeHTML(c.title)+'</span><span class="chatDate">'+new Date(c.updated).toLocaleString()+'</span>';o.onclick=function(){active=c.id;render();hide(drawerO)};var more=document.createElement("button");more.className="chatMore";more.textContent="•••";more.onclick=function(){var n=prompt("Rename chat",c.title);if(n!==null&&n.trim()){c.title=n.trim();c.updated=Date.now();saveChats();renderChats();return}if(confirm("Delete this chat?")){chats=chats.filter(function(x){return x.id!==c.id});if(active===c.id)active=null;saveChats();renderChats();render()}};r.appendChild(o);r.appendChild(more);chatList.appendChild(r)});if(!chatList.children.length)chatList.innerHTML='<p class="note">No chats yet.</p>'}
+function bottom(){requestAnimationFrame(function(){M.scrollTop=M.scrollHeight})}function resize(){P.style.height="auto";P.style.height=Math.min(P.scrollHeight,126)+"px";P.style.overflowY=P.scrollHeight>126?"auto":"hidden"}function sendState(){S.disabled=running||(!P.value.trim()&&!pendingImage);S.classList.toggle("stop",running)}
+$("menuBtn").onclick=function(){renderChats();show(drawerO)};$("drawerClose").onclick=function(){hide(drawerO)};drawerO.onclick=function(e){if(e.target===drawerO)hide(drawerO)};drawer.onclick=function(e){e.stopPropagation()};$("newChatBtn").onclick=function(){active=null;render();hide(drawerO);P.focus()};search.oninput=renderChats;
+$("settingsBtn").onclick=function(){show(settingsO)};$("settingsClose").onclick=function(){hide(settingsO)};settingsO.onclick=function(e){if(e.target===settingsO)hide(settingsO)};settingsSheet.onclick=function(e){e.stopPropagation()};$("keyReveal").onclick=function(){var showKey=keyInput.type==="password";keyInput.type=showKey?"text":"password";this.textContent=showKey?"Hide":"Show"};
+$("saveSettings").onclick=function(){if(!keyInput.value.trim()){alert("Enter your OpenAI API key.");return}key=keyInput.value.trim();model=modelSelect.value;instructions=instructionsInput.value.trim();showUsage=usageToggle.checked;set("oai_key",key);set("oai_model",model);set("oai_instructions",instructions);set("oai_usage",showUsage?"1":"0");modelLabel.textContent=modelName(model);hide(settingsO);renderUsage()};
+$("modelBtn").onclick=function(){show(modelO)};modelO.onclick=function(e){if(e.target===modelO)hide(modelO)};modelSheet.onclick=function(e){e.stopPropagation()};qa(".modelChoice").forEach(function(b){b.onclick=function(){model=this.getAttribute("data-model");modelSelect.value=model;modelLabel.textContent=modelName(model);set("oai_model",model);hide(modelO)}});
+A.onclick=function(){picker.click()};picker.onchange=function(){var f=this.files&&this.files[0];if(!f)return;if(f.size>7*1024*1024){alert("Please choose an image under 7 MB.");this.value="";return}var r=new FileReader();r.onload=function(){pendingImage=r.result;renderAttachment();sendState()};r.readAsDataURL(f)};function renderAttachment(){if(!pendingImage){AP.classList.add("hidden");AP.innerHTML="";return}AP.classList.remove("hidden");AP.innerHTML='<div class="attachCard"><img src="'+pendingImage+'"><span>Image attached</span><button id="rmImg">×</button></div>';$("rmImg").onclick=function(){pendingImage=null;picker.value="";renderAttachment();sendState()}}
+P.oninput=function(){resize();sendState()};P.onkeydown=function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();if(!running)sendMessage()}};S.onclick=function(){if(running)stop();else sendMessage()};
+function apiInput(c){return c.messages.map(function(m){if(m.role==="user"&&m.image)return{role:"user",content:[{type:"input_text",text:m.text||"What is in this image?"},{type:"input_image",image_url:m.image,detail:"auto"}]};return{role:m.role,content:m.text}})}function extract(d){var s="";(d.output||[]).forEach(function(i){(i.content||[]).forEach(function(x){if(x.type==="output_text")s+=x.text||""})});return s}
+async function sendMessage(){var text=P.value.trim(),img=pendingImage;if(!text&&!img)return;if(!key){show(settingsO);return}var c=current()||createChat();if(!c.messages.length)c.title=titleFor(text);c.messages.push({role:"user",text:text,image:img||null});c.updated=Date.now();saveChats();P.value="";pendingImage=null;picker.value="";renderAttachment();resize();render();var wait=bubble("assistant","",null,true);running=true;aborter=new AbortController();sendState();bottom();
+try{var body={model:model,input:apiInput(c),store:false};if(instructions)body.instructions=instructions;var res=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify(body),signal:aborter.signal});var data=await res.json();if(!res.ok)throw new Error(data&&data.error&&data.error.message?data.error.message:"API error "+res.status);var answer=extract(data)||"No text was returned.";wait.row.remove();c.messages.push({role:"assistant",text:answer});c.updated=Date.now();lastUsage=data.usage||null;saveChats();render();renderUsage()}catch(e){wait.row.remove();if(e.name!=="AbortError"){c.messages.push({role:"assistant",text:"Error: "+(e.message||String(e))});saveChats();render()}}finally{running=false;aborter=null;sendState();renderChats()}}
+function stop(){if(aborter)aborter.abort();running=false;sendState()}function regenerate(){var c=current();if(!c||!c.messages.length)return;while(c.messages.length&&c.messages[c.messages.length-1].role==="assistant")c.messages.pop();var u=c.messages.pop();if(!u)return;P.value=u.text||"";pendingImage=u.image||null;renderAttachment();saveChats();render();resize();sendMessage()}
+function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).catch(function(){fallback(t)});else fallback(t)}function fallback(t){var x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}$("copyBtn").onclick=function(){copyText(menuText);hide(menuO)};$("regenBtn").onclick=function(){hide(menuO);regenerate()};$("shareBtn").onclick=function(){hide(menuO);if(window.webkit&&window.webkit.messageHandlers.share)window.webkit.messageHandlers.share.postMessage(menuText);else copyText(menuText)};$("menuCancel").onclick=function(){hide(menuO)};menuO.onclick=function(e){if(e.target===menuO)hide(menuO)};msgMenu.onclick=function(e){e.stopPropagation()};
+function renderUsage(){if(!showUsage||!lastUsage){usageLine.textContent="AI can make mistakes.";return}usageLine.textContent=(lastUsage.input_tokens||0)+" input • "+(lastUsage.output_tokens||0)+" output tokens"}
+document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(a){e.preventDefault();if(window.webkit&&window.webkit.messageHandlers.openURL)window.webkit.messageHandlers.openURL.postMessage(a.href)}});document.addEventListener("gesturestart",function(e){e.preventDefault()});if(window.visualViewport)window.visualViewport.addEventListener("resize",function(){document.body.classList.toggle("keyboard",normalH-window.visualViewport.height>120);bottom()});
+resize();sendState();render();renderChats();renderUsage();window.ChatGPT15={version:"2.0",ready:true};})();
