@@ -44,6 +44,9 @@ jobs:
         run: |
           node --check ChatGPT15/Web/app.js
 
+      - name: Install Debian packaging tools
+        run: brew install dpkg
+
       - name: Build Havoc DEB
         run: |
           set -e
