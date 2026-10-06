@@ -145,3 +145,10 @@ body.theme-aurora .roundBtn{background:#315cbb!important}
 /* Keep drawer/list geometry identical in every theme */
 #drawer .secondary,#drawer .primary,#drawer .field,#drawer .projectsToggle{min-height:42px;border-radius:11px;margin-bottom:6px}
 .chatRow{border-radius:10px;margin:2px 0}.chatOpen{min-height:48px}.inlineProjectRow{min-height:40px}
+
+/* Classic iOS: prevent dark pressed/highlight states while scrolling/tapping */
+body.theme-classic button,body.theme-classic a,body.theme-classic .chatRow,body.theme-classic .inlineProjectRow,body.theme-classic .projectChildRow,body.theme-classic .projectRow,body.theme-classic .skillRow,body.theme-classic .archiveRow{-webkit-tap-highlight-color:transparent!important}
+body.theme-classic .chatRow:active,body.theme-classic .inlineProjectRow:active,body.theme-classic .projectChildRow:active,body.theme-classic .projectRow:active,body.theme-classic .chatOpen:active,body.theme-classic .projectChildOpen:active,body.theme-classic .inlineProjectOpen:active,body.theme-classic .inlineProjectMore:active,body.theme-classic .projectChildMore:active,body.theme-classic .chatMore:active{background:transparent!important;color:inherit!important}
+body.theme-classic #drawer button:active,body.theme-classic .sheet button:active{filter:none!important;box-shadow:none!important}
+body.theme-classic .secondary:active,body.theme-classic .field:active{background:#fff!important;color:#20242b!important}
+body.theme-classic .primary:active,body.theme-classic .roundBtn:active{background:#1677e8!important;color:#fff!important}
