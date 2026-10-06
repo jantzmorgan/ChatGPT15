@@ -117,9 +117,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             return
         }
 
-        let joined = pages.joined(separator: "
-
-")
+        let joined = pages.joined(separator: String(UnicodeScalar(10)!) + String(UnicodeScalar(10)!))
         let escaped = joined
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "`", with: "\\`")
