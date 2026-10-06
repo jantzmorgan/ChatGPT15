@@ -34,6 +34,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         config.userContentController.add(self, name: "touchID")
         config.userContentController.add(self, name: "exportFile")
         config.userContentController.add(self, name: "extractPDF")
+        config.userContentController.add(self, name: "shareImage")
+        config.userContentController.add(self, name: "saveImage")
 
         webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -75,6 +77,8 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         }
         else if message.name == "touchID" { handleTouchID() }
         else if message.name == "extractPDF" { handlePDFExtraction(value) }
+        else if message.name == "shareImage" { handleImage(value, save: false) }
+        else if message.name == "saveImage" { handleImage(value, save: true) }
     }
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let a = UIAlertController(title:"ChatGPT 15", message:message, preferredStyle:.alert)
@@ -90,6 +94,36 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         a.addAction(UIAlertAction(title:"Cancel",style:.cancel){_ in completionHandler(nil)})
         a.addAction(UIAlertAction(title:"Save",style:.default){_ in completionHandler(a.textFields?.first?.text)});present(a,animated:true)
     }
+    private func imageFromDataURL(_ value: String) -> UIImage? {
+        guard let comma = value.firstIndex(of: ",") else { return nil }
+        let encoded = String(value[value.index(after: comma)...])
+        guard let data = Data(base64Encoded: encoded, options: .ignoreUnknownCharacters) else { return nil }
+        return UIImage(data: data)
+    }
+
+    private func handleImage(_ value: String, save: Bool) {
+        guard let image = imageFromDataURL(value) else {
+            let a = UIAlertController(title: "Luma", message: "Luma could not read this image.", preferredStyle: .alert)
+            a.addAction(UIAlertAction(title: "OK", style: .default))
+            present(a, animated: true)
+            return
+        }
+        if save {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        } else {
+            let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            if let p = vc.popoverPresentationController { p.sourceView = view; p.sourceRect = CGRect(x:view.bounds.midX,y:view.bounds.maxY-30,width:1,height:1) }
+            present(vc, animated: true)
+        }
+    }
+
+    @objc private func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        let message = error == nil ? "Image saved to Photos." : "Luma could not save the image."
+        let a = UIAlertController(title: "Luma", message: message, preferredStyle: .alert)
+        a.addAction(UIAlertAction(title: "OK", style: .default))
+        present(a, animated: true)
+    }
+
     private func handlePDFExtraction(_ dataURL: String) {
         guard let comma = dataURL.firstIndex(of: ",") else {
             sendPDFResult(error: "Invalid PDF data.")
@@ -155,5 +189,7 @@ final class WebViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"touchID")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"exportFile")
         webView?.configuration.userContentController.removeScriptMessageHandler(forName:"extractPDF")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"shareImage")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName:"saveImage")
     }
 }
