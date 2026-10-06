@@ -2,3 +2,26 @@
 .secondary{width:100%;min-height:43px;border:1px solid var(--line);border-radius:13px;background:#121b2a;color:#dce6ff;font-weight:600;margin:0 0 12px}.projectCreate{display:grid;grid-template-columns:1fr 92px;gap:8px;margin-bottom:12px}.projectCreate .primary{margin:0;min-height:44px}.projectRow{display:flex;align-items:center;background:#101722;border-radius:12px;margin:6px 0}.projectOpen{flex:1;border:0;background:transparent;text-align:left;padding:12px}.projectOpen b{display:block}.projectOpen span{display:block;color:var(--muted);font-size:11px;margin-top:3px}.projectDelete{border:0;background:transparent;color:#718098;padding:14px}.projectBadge{display:inline-block;font-size:10px;color:#8ca9e8;background:#14264b;border-radius:7px;padding:2px 6px;margin-bottom:5px}.generatedImage{display:block;width:min(100%,360px);border-radius:14px;margin-top:8px}.imageSave{border:0;background:#18243a;border-radius:9px;padding:7px 10px;margin-top:7px;font-size:12px}
 
 .projectActive{border:1px solid rgba(70,122,230,.28);background:#0f1b33;border-radius:13px;padding:10px 11px;margin:0 0 12px}.projectActive b{display:block}.projectActive span{font-size:11px;color:#8c9bb5}.dangerBtn{width:100%;min-height:43px;border:1px solid rgba(255,80,80,.25);border-radius:13px;background:rgba(100,20,25,.25);color:#ff8f96;font-weight:600;margin:0 0 12px}.projectChats{margin-top:15px;border-top:1px solid var(--line);padding-top:10px}.projectChats h3{font-size:13px;color:#8d99af;margin:0 0 8px}.projectChatRow{display:flex;align-items:center;background:#101722;border-radius:11px;margin:5px 0}.projectChatOpen{flex:1;border:0;background:transparent;text-align:left;padding:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.projectChatDelete{border:0;background:transparent;color:#718098;padding:11px}
+
+/* ChatGPT-style sidebar refinement */
+#drawer{padding-left:12px;padding-right:12px;background:#0b1019}
+.drawerHead{padding:0 4px;margin-bottom:10px}
+#drawer .primary,#drawer .secondary{background:transparent;border:0;box-shadow:none;text-align:left;justify-content:flex-start;padding:10px 12px;min-height:42px;margin:2px 0;border-radius:10px;font-weight:600}
+#drawer .primary:active,#drawer .secondary:active{background:#151d2a}
+#drawer .field{margin:5px 0 9px;background:#111722;border:0;min-height:40px}
+.chatRow{background:transparent;border-radius:9px;margin:1px 0;min-height:42px}
+.chatRow:active{background:#151d2a}
+.chatOpen{padding:8px 10px}
+.chatTitle{font-size:14px;font-weight:500}
+.chatDate{display:none}
+.chatMore{padding:10px 12px;font-size:15px}
+#projectList .projectRow{background:transparent;border-radius:9px;margin:1px 0}
+#projectList .projectRow:active{background:#151d2a}
+.projectOpen{padding:9px 10px;font-size:14px}
+.projectOpen b{font-weight:500}
+.projectOpen span{font-size:10px}
+.projectActive{margin:5px 0 8px;border:0;background:#111a29;padding:9px 10px}
+.roundBtn{position:relative;font-size:0;line-height:0;padding:0;display:flex;align-items:center;justify-content:center}
+.roundBtn::before,.roundBtn::after{content:"";position:absolute;width:14px;height:2px;background:#f5f7ff;border-radius:2px;left:50%;top:50%;transform-origin:center}
+.roundBtn::before{transform:translate(-50%,-50%) rotate(45deg)}
+.roundBtn::after{transform:translate(-50%,-50%) rotate(-45deg)}
