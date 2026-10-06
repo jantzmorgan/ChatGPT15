@@ -35,6 +35,14 @@ jobs:
           cp ChatGPT15/AppIcon.png build/Payload/ChatGPT15.app/AppIcon.png
           chmod +x build/Payload/ChatGPT15.app/ChatGPT15
 
+      - name: Validate Info.plist
+        run: |
+          plutil -lint build/Payload/ChatGPT15.app/Info.plist
+
+      - name: Validate JavaScript
+        run: |
+          node --check ChatGPT15/Web/app.js
+
       - name: Create IPA
         run: |
           cd build
