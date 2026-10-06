@@ -25,3 +25,8 @@
 .roundBtn::before,.roundBtn::after{content:"";position:absolute;width:14px;height:2px;background:#f5f7ff;border-radius:2px;left:50%;top:50%;transform-origin:center}
 .roundBtn::before{transform:translate(-50%,-50%) rotate(45deg)}
 .roundBtn::after{transform:translate(-50%,-50%) rotate(-45deg)}
+
+/* Vertically center model label + chevron */
+.modelBtn{display:flex;align-items:center;justify-content:center;line-height:20px}
+#modelLabel{display:inline-flex;align-items:center;line-height:20px}
+.chev{display:inline-flex;align-items:center;justify-content:center;height:20px;line-height:20px;margin-left:6px;position:relative;top:-1px}
